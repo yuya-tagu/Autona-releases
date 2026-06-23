@@ -55,3 +55,7 @@
 
 MIT License。本ソフトウェアは [TournamentStreamHelper](https://github.com/joaorb64/TournamentStreamHelper)（MIT, © João Ribeiro Bezerra）を起点に構築したプロジェクトで、一部に TSH 由来の構成要素・素材を含みます。
 配布物に同梱の `LICENSE` および第三者素材クレジット `ATTRIBUTIONS.md` を参照してください。
+
+## 謝辞 / Acknowledgements
+
+設計・UX の着想にあたり、同じく格闘ゲーム大会向けスコアボードツールである [LatteCon](https://github.com/KameLatte0313/LatteCon)（© Kamelatte）を参考にしました（着想のみ。コード・素材の流用はありません）。
