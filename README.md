@@ -53,5 +53,5 @@
 
 ## ライセンス / License
 
-MIT License。本ソフトウェアは [TournamentStreamHelper](https://github.com/joaorb64/TournamentStreamHelper)（MIT, © João Ribeiro Bezerra）を起点に大幅な再構築を行った派生プロジェクトで、一部に TSH 由来の構成要素・素材を含みます。
+MIT License。本ソフトウェアは [TournamentStreamHelper](https://github.com/joaorb64/TournamentStreamHelper)（MIT, © João Ribeiro Bezerra）を起点に構築したプロジェクトで、一部に TSH 由来の構成要素・素材を含みます。
 配布物に同梱の `LICENSE` および第三者素材クレジット `ATTRIBUTIONS.md` を参照してください。
