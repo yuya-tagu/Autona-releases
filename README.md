@@ -83,7 +83,7 @@
 | 対象 | ライセンス |
 |------|-----------|
 | 上流 [TournamentStreamHelper](https://github.com/joaorb64/TournamentStreamHelper)（© João Ribeiro Bezerra）由来の部分 | MIT License |
-| Autona 固有の部分 | © 2026 taguyan (HiveeWorks), All rights reserved（利用条件は `TERMS.md`） |
+| Autona 固有の部分 | © 2026 taguyan, All rights reserved（利用条件は `TERMS.md`） |
 | Qt / PySide6 | LGPL v3（動的リンク。`_internal/` 内のライブラリは利用者が差し替え可能） |
 
 同梱する第三者ソフトウェアのライセンスは `THIRD-PARTY-NOTICES.md` と `licenses/` フォルダに、素材（フォント・国旗画像等）の出典は `ATTRIBUTIONS.md` に集約しています。
@@ -92,4 +92,4 @@
 
 ## 謝辞 / Acknowledgements
 
-設計・UX の着想にあたり、同じく格闘ゲーム大会向けスコアボードツールである [LatteCon](https://github.com/KameLatte0313/LatteCon)（© Kamelatte）を参考にしました（着想のみで、コード・素材の流用はありません）。
+設計・UX の着想にあたり、同じく格闘ゲーム大会向けスコアボードツールである [LatteCon](https://github.com/KameLatte0313/LatteCon)（© Kamelatte） [BraceBracket](https://bracebracket.app/)を参考にしました（着想のみで、コード・素材の流用はありません）。
