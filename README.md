@@ -92,4 +92,4 @@
 
 ## 謝辞 / Acknowledgements
 
-設計・UX の着想にあたり、同じく格闘ゲーム大会向けスコアボードツールである [LatteCon](https://github.com/KameLatte0313/LatteCon)（© Kamelatte） [BraceBracket](https://bracebracket.app/)を参考にしました（着想のみで、コード・素材の流用はありません）。
+設計・UX の着想にあたり、同じく格闘ゲーム大会向けスコアボードツールである [LatteCon](https://github.com/KameLatte0313/LatteCon)（© Kamelatte） [BraceBracket](https://bracebracket.app/) Copyright 2022 BraceBracketを参考にしました（着想のみで、コード・素材の流用はありません）。
