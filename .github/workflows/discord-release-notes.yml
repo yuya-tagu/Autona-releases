@@ -1,0 +1,101 @@
+name: Discord release notes
+
+# Autona 本体のリリース（タグ v*）を公開したら、リリースノートを Discord に投稿する。
+# ワーカー（worker-v*）・プレリリース・下書きは投稿しない。整形は .github/scripts/release-notes.mjs。
+# 要: リポジトリの Actions secret DISCORD_WEBHOOK_UPDATES（投稿先チャンネルの Webhook URL）
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 投稿するリリースのタグ（例 v2.3.0）
+        required: true
+        type: string
+      dry_run:
+        description: 投稿せず、本文をサマリーに出すだけにする
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: discord-release-notes-${{ github.event.release.tag_name || inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  post:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (!github.event.release.prerelease && !github.event.release.draft &&
+      startsWith(github.event.release.tag_name, 'v'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+      DRY_RUN: ${{ inputs.dry_run == true }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+
+      # イベントの payload ではなく API から取る（手動実行と同じ経路にし、公開後の編集も拾う）
+      - name: Build message
+        id: message
+        run: |
+          gh api "repos/$REPO/releases/tags/$TAG" > release.json
+          url=$(jq -r .html_url release.json)
+          jq -r '.body // ""' release.json \
+            | node .github/scripts/release-notes.mjs "$TAG" "$url" > message.md
+          if ! [[ $TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::notice::$TAG は本体のリリースではないため投稿しない"
+            : > message.md
+          fi
+          echo "empty=$([[ -s message.md ]] && echo false || echo true)" >> "$GITHUB_OUTPUT"
+          {
+            echo "### $TAG"
+            echo
+            if [[ -s message.md ]]; then
+              echo "$(wc -m < message.md) 文字"
+              echo
+              echo '````markdown'
+              cat message.md
+              echo '````'
+            else
+              echo '投稿する内容がない'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Post to Discord
+        if: steps.message.outputs.empty == 'false' && env.DRY_RUN == 'false'
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_UPDATES }}
+        run: |
+          if [[ -z $WEBHOOK ]]; then
+            echo "::error::secret DISCORD_WEBHOOK_UPDATES が未設定"
+            exit 1
+          fi
+          jq -n --rawfile c message.md '{content: ($c | rtrimstr("\n")), allowed_mentions: {parse: []}}' > payload.json
+
+          post() {
+            curl -sS -o response.json -w '%{http_code}' -X POST \
+              -H 'Content-Type: application/json' --data @payload.json "$WEBHOOK"
+          }
+
+          code=$(post)
+          if [[ $code == 429 ]]; then
+            wait=$(jq -r '(.retry_after // 1) | ceil' response.json)
+            echo "429 を受けたため ${wait} 秒待って再試行する"
+            sleep "$wait"
+            code=$(post)
+          fi
+          if [[ $code != 2* ]]; then
+            echo "::error::Discord への投稿に失敗した (HTTP $code)"
+            cat response.json
+            exit 1
+          fi
+          echo '投稿済み' >> "$GITHUB_STEP_SUMMARY"
