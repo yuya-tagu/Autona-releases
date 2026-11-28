@@ -1,4 +1,7 @@
 {
-  "listed": [],
+  "listed": [
+    {"kind": "plugin", "id": "taguyan.webhook", "repo": "yuya-tagu/autona-webhook", "repo_id": 1472964788,
+     "author": "taguyan", "summary": {"ja": "リザルト画像と試合の結果を Discord / Slack の Webhook に送る", "en": "Post result images and match results to a Discord / Slack webhook"}, "listed_at": "2026-11-28"}
+  ],
   "blocked": []
 }
